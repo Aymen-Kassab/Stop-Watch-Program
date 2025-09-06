@@ -49,6 +49,10 @@ class MainWindow(QWidget):
            }
            QLabel{
               font-size: 70px;
+              font-family: calibri;
+              font-weight: bold;
+              background-color: #6bdcf2;
+              border-radius: 10px;
            }
            QPushButton#start_btn{
               background-color: #3df25e;
@@ -84,21 +88,34 @@ class MainWindow(QWidget):
              border: 2px solid black; 
            }
         """)
+        # Now let's connect each button with its function
+        self.start_btn.clicked.connect(self.start)
+        self.stop_btn.clicked.connect(self.stop)
+        self.reset_btn.clicked.connect(self.reset)
+
+        self.timer.timeout.connect(self.update_time)
 
     def start(self):
-        pass
+        self.timer.start(10) # Interval of timeout every 10 milliseconds
 
     def stop(self):
-        pass
+        self.timer.stop()
 
     def reset(self):
-        pass
+        self.timer.stop()
+        self.time = QTime(0, 0, 0, 0)
+        self.time_label.setText("00:00:00:00")
 
     def time_format(self, time):
-        pass
+        hours = time.hour()
+        minutes = time.minute()
+        sec = time.second()
+        msec = time.msec() // 10
+        return f"{hours:02}:{minutes:02}:{sec:02}:{msec:02}"
 
     def update_time(self):
-        pass
+        self.time = self.time.addMSecs(10) # Adding 10 milliseconds as a time update
+        self.time_label.setText(self.time_format(self.time))
 
 def main():
     app = QApplication(sys.argv)
